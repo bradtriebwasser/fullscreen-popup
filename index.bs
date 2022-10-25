@@ -1,5 +1,5 @@
 <pre class=metadata>
-Title: Multi-Screen Window Placement
+Title: Multi-Screen Window Placement1
 Shortname: window-placement
 Abstract: This document defines a web platform API that allows script to query the device for information about its screens, and place content on specific screens.
 Status: ED
@@ -836,3 +836,4 @@ Victor Costan
 Issue: Ensure we didn't forget anyone!
 
 Special thanks to Tab Atkins, Jr. for creating and maintaining [Bikeshed](https://github.com/tabatkins/bikeshed), the specification authoring tool used to create this document, and for his general authoring advice.
+</body>
