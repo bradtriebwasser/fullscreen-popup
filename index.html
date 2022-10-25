@@ -2,14 +2,14 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Multi-Screen Window Placement</title>
+  <title>Multi-Screen Window Placement1</title>
   <meta content="ED" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/W3C-ED" rel="stylesheet">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="Bikeshed version b0de3432c, updated Thu Oct 13 09:16:59 2022 -0700" name="generator">
+  <meta content="Bikeshed version afdea9b3f, updated Fri Oct 21 14:30:36 2022 -0700" name="generator">
   <link href="https://www.w3.org/TR/window-placement/" rel="canonical">
   <link href="logo.svg" rel="icon">
-  <meta content="5d6ed5a1c58dd1b9c97d5ab37ee0c32ff8afecf1" name="document-revision">
+  <meta content="5a95814834430c54fcc100c393d98444c986a939" name="document-revision">
 <style>
 .domintro::before {
     content: 'For web developers (non-normative)';
@@ -316,6 +316,14 @@ a.self-link:hover {
 .heading > a.self-link {
     font-size: 83%;
 }
+.example > a.self-link,
+.note > a.self-link,
+.issue > a.self-link {
+    /* These blocks are overflow:auto, so positioning outside
+       doesn't work. */
+    left: auto;
+    right: 0;
+}
 li > a.self-link {
     left: calc(-1 * (3.5rem - 26px) - 2em);
 }
@@ -608,8 +616,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
-   <h1 class="p-name no-ref" id="title">Multi-Screen Window Placement</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#ED">Editor’s Draft</a>, <time class="dt-updated" datetime="2022-10-19">19 October 2022</time></p>
+   <h1 class="p-name no-ref" id="title">Multi-Screen Window Placement1</h1>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#ED">Editor’s Draft</a>, <time class="dt-updated" datetime="2022-10-25">25 October 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -1976,7 +1984,7 @@ for helping craft this specification.</p>
    <dt id="biblio-css-values-4">[CSS-VALUES-4]
    <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://drafts.csswg.org/css-values-4/"><cite>CSS Values and Units Module Level 4</cite></a>. URL: <a href="https://drafts.csswg.org/css-values-4/">https://drafts.csswg.org/css-values-4/</a>
    <dt id="biblio-cssom-view-1">[CSSOM-VIEW-1]
-   <dd>CSS Object Model View Module Level 1 URL: <a href="https://www.w3.org/TR/cssom-view/">https://www.w3.org/TR/cssom-view/</a>
+   <dd>Simon Pieters. <a href="https://drafts.csswg.org/cssom-view/"><cite>CSSOM View Module</cite></a>. URL: <a href="https://drafts.csswg.org/cssom-view/">https://drafts.csswg.org/cssom-view/</a>
    <dt id="biblio-design-principles">[DESIGN-PRINCIPLES]
    <dd>Sangwhan Moon. <a href="https://w3ctag.github.io/design-principles/"><cite>Web Platform Design Principles</cite></a>. URL: <a href="https://w3ctag.github.io/design-principles/">https://w3ctag.github.io/design-principles/</a>
    <dt id="biblio-dom">[DOM]
