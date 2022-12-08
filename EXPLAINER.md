@@ -121,6 +121,15 @@ This proposal requires that a new fullscreen window must first be also considere
 #### **Fullscreen Exit Behavior**
 The proposed note specifies that user agents are encouraged to restore the window to specified bounds after fullscreen exits. Some alternative examples include: Closing the window, restoring to a popup with bounds expanded to each edge of the display.
 
+#### **Asynchronous behavior**
+`Element.requestFullscreen()` returns a promise that resolves after the element becomes fullscreen, but Window.open() does not return a promise. Web applications
+would need alternative methods of detecting when the window is open, ready and fullscreen.
+
+#### **fullscreenchange event**
+The browser may omit a `fullscreenchange` event prior to any scripts being executed in the new popup window frame. Web applications expecting a `fullscreenchange`
+would need to account for this behavior in fullscreen-popup scenarios, or browsers would need to carefully ensure that `fullscreenchange` is not emitted until after
+scripts are ready to handle the event.
+
 ## Security Considerations
 A notable security consideration stems from the fact that the web application may launch a fullscreen window on a display that the user is not looking at, since the [user activation](https://html.spec.whatwg.org/multipage/interaction.html#tracking-user-activation) (i.e. button click) may have occurred on another display which the user is focused on. The user may not notice the fullscreen window transition, nor the fullscreen bubble (e.g. Firefox's "&lt;origin> is now full screen [Exit Full Screen (Esc)]" or Chrome's "Press [Esc] to exit full screen") which could allow for a malicious application to mimic other applications or the operating system without the user realizing that it is a browser window.
 
