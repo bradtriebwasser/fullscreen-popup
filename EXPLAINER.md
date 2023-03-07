@@ -114,8 +114,8 @@ The ability to detect supported keys of the `features` argument is out of scope 
 
 #### **Requiring popup initial boundaries**
 Scripts may specify window boundaries through the `left`, `top`, `width`, `height` features of [`window.open()`](https://html.spec.whatwg.org/multipage/window-object.html#dom-open-dev) which, under this proposal, control which display the window will appear fullscreen on. Leaving out these parameters may cause undefined behavior (e.g. appearing on the display which contains screen coordinates (0,0)). As a more concrete solution, the algorithmic check for fullscreen could require that `left` and `top` are set which always require the web application to specify a display, and leaves less room for decision by the user agent. However, since `left`, `top`, `width`, `height` are already not required for popup windows, it's reasonable to let the user agent use the existing defaults and fullscreen the window on whichever display would have contained the popup if the `fullscreen` parameter wasn't specified.
-<strong>Other fullscreen windows</strong>
 
+#### **Other fullscreen windowss**
 This proposal requires that a new fullscreen window must first be also considered a popup window. Future enhancements may consider allowing other types of windows to be opened in fullscreen.
 
 #### **Fullscreen Exit Behavior**
