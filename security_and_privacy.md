@@ -3,257 +3,71 @@
 The following considerations are taken from the [W3C Security and Privacy
 Self-Review Questionnaire](https://www.w3.org/TR/security-privacy-questionnaire).
 
-## 2.1 What information might this feature expose to Web sites or other parties, and for what purposes is that exposure necessary?
+## 2.1. What information might this feature expose to Web sites or other parties, and for what purposes is that exposure necessary?
 
-This feature exposes information about screens connected to the device, which is
-necessary for multi-screen window placement use cases explored in the explainer.
+This feature does not directly expose information to web sites that [`element.requestFullscreen`](https://fullscreen.spec.whatwg.org/#ref-for-dom-element-requestfullscreen%E2%91%A0) doesn't already expose. 
 
-Currently, some limited information about the screen that each window currently
-occupies is available through its Screen interface and related media queries.
-Information about the window's placement on the current screen (or in more rich
-cross-screen coordinates) is already available through the Window interface.
 
-This feature provides a surface to optionally expose information about all
-connected screens, additional display properties of each screen, and events when
-the set of screens or their properties change. It also allows window placements
-to be exposed in multi-screen coordinates. The newly exposed information has
-been tailored to what would typically be required for the most essential
-multi-screen window placement features. See the ScreenDetailed definition for
-the full set of new screen properties exposed and their respective utility.
+## 2.2. Do features in your specification expose the minimum amount of information necessary to enable their intended uses?
 
-It should be noted that existing `Window.screenLeft`, `screenTop`, and
-non-standard `Screen.left` and `top` values, are generally given in cross-screen
-coordinates, so it may already be possible for sites to infer the presence of,
-and limited information about, screens other than the one its window currently
-occupies. Also, some user agent implementations already allow cross-screen
-window placement without permission, making it possible to gather multi-screen
-information through brute-force movement of a window outside the current
-screen's bounds, checking the resulting position and `window.screen` object.
+No information is exposed to web sites and the usage of the feature is gated on `window-management` permission which already exposes data that could be indirectly obtained from this API (e.g. the dimensions of a screen.). See [Window Management Security & Privacy](https://github.com/w3c/window-management/blob/main/security_and_privacy.md).
 
-If `Screen`, accessed via `Window.screen` does not expose non-standard
-[`left`](https://developer.mozilla.org/en-US/docs/Web/API/Screen/left) and
-[`top`](https://developer.mozilla.org/en-US/docs/Web/API/Screen/top) values,
-then specifying `Window.screenX` and `screenY` in multi-screen coordinates
-(rather than relative to the current screen) may allow sites to infer the
-presence of, and limited information about, screens other than the one its
-window currently occupies.
+## 2.3. How do the features in your specification deal with personal information, personally-identifiable information (PII), or information derived from them?
 
-## 2.2 Is this specification exposing the minimum amount of information necessary to power the feature?
+No information is exposed to web sites and the usage of the feature is gated on `window-management` permission which already exposes data that could be indirectly obtained from this API (e.g. the dimensions of a screen.). See [Window Management Security & Privacy](https://github.com/w3c/window-management/blob/main/security_and_privacy.md).
 
-Generally, yes. The information exposed is widely useful to a variety of window
-placement use cases, but not all information will be relevant to every use case.
-Further limiting what overall information could be exposed, may be a valuable
-[general principle](https://w3ctag.github.io/design-principles/#device-enumeration),
-but would either render this API useless or add nontrivial implementer work and
-API complexity for questionable utility and protections.
-
-For example, user agents could show a UI to select the screen used for element
-fullscreen, but this has no real advantage for users over the cumbersome current
-pattern of dragging windows between screens before entering fullscreen, and
-existing APIs like `window.screen` would expose most of the same information
-about that screen anyway. Additionally, user agents lack the context around a
-web application's window placement actions, and declarative arrangements
-specified by a site are unlikely to provide the requisite expressiveness for
-most use cases.
-
-All newly exposed information could be gated by the proposed `window-placement`
-permission, limited to secure contexts, top-level frames, gated by user gesture,
-active window contexts, and other protections to help mitigate concerns around
-[fingerprinting](https://w3c.github.io/fingerprinting-guidance).
-
-The amount of information exposed to a given site would be at the discretion of
-users and their agents. Exposing the full set of proposed information (with user
-permission) enables web applications to offer compelling functionality, but
-exposing a limited subset of new information may be useful in some scenarios.
-
-Supporting queries for limited pieces of information is not directly useful to
-sites conducting window placement use cases, and does not specifically prohibit
-abusive sites from requesting all available information. Broad filters or making
-multiple calls with opposite filters wouldn't constrain the information returned
-(e.g. getScreenDetails({minWidth:10}) or getScreenDetails({internal:true}) +
-getscreens({internal:false})).
-
-## 2.3 How does this specification deal with personal information or personally-identifiable information or information derived thereof?
-
-Information about the device's screens and the placement of a site's windows are
-exposed to the site when the user grants permission, and when other conditions
-are satisfied (e.g. secure context).
-
-## 2.4 How does this specification deal with sensitive information?
+## 2.4. How do the features in your specification deal with sensitive information?
 
 This API does not expose any sensitive information, beyond that described above.
 
-## 2.5 Does this specification introduce new state for an origin that persists across browsing sessions?
+## 2.5. Do the features in your specification introduce new state for an origin that persists across browsing sessions?
 
-The user agent could persist screen permission grants.
+The user agent could persist `window-management` permission grants.
 
-## 2.6 What information from the underlying platform, e.g. configuration data, is exposed by this specification to an origin?
+## 2.6. Do the features in your specification expose information about the underlying platform to origins?
 
-This API proposes exposing about 10-18 new properties for each connected screen,
-most of which directly correlate with underlying platform configuration data.
-See `ScreenDetailed` for all properties exposed and their respective utility.
+No information is exposed to web sites and the usage of the feature is gated on `window-management` permission which already exposes data that could be indirectly obtained from this API (e.g. the dimensions of a screen.). See [Window Management Security & Privacy](https://github.com/w3c/window-management/blob/main/security_and_privacy.md).
 
-## 2.7 Does this specification allow an origin access to sensors on a user’s device?
-
-No. If anything, this API may expose the presence of touch or pen sensors
-associated with each display, but not access to sensor data itself.
-
-## 2.8 What data does this specification expose to an origin? Please also document what data is identical to data exposed by other features, in the same or different contexts.
-
-The API exposes a new attribute and event on the `Screen` interface:
-* Whether the visual workspace extends over 2+ screens
-  * Not web-exposed, but inferrable when a site has windows on multiple screens
-* Events fired when Screen attributes change
-  * Not web-exposed, but observable with polling
-
-The API exposes a set of `ScreenDetailed` objects in a `ScreenDetails` interface,
-providing info about each connected display, extending the singular
-[`Screen`](https://developer.mozilla.org/en-US/docs/Web/API/Screen) object
-currently available to each window, and similar to the set of `Screen` objects
-available to an origin if separate windows for that origin were placed on each
-of the connected screens, by aggregating the respective `window.screen` objects.
-
-This API proposes exposing these properties on each `ScreenDetailed` object:
-* The width of the available screen area
-  * Standardized as [Screen.availWidth](https://drafts.csswg.org/cssom-view/#dom-screen-availwidth)
-* The height of the available screen area
-  * Standardized as [Screen.availHeight](https://drafts.csswg.org/cssom-view/#dom-screen-availheight)
-* The width of the screen area
-  * Standardized as [Screen.width](https://drafts.csswg.org/cssom-view/#dom-screen-width)
-* The height of the screen area
-  * Standardized as [Screen.height](https://drafts.csswg.org/cssom-view/#dom-screen-height)
-* The bits allocated to colors for a pixel of the screen
-  * Standardized as [Screen.colorDepth](https://drafts.csswg.org/cssom-view/#dom-screen-colordepth)
-* The bits allocated to colors for a pixel of the screen
-  * Standardized as [Screen.pixelDepth](https://drafts.csswg.org/cssom-view/#dom-screen-pixeldepth)
-* The orientation type of the screen
-  * Standardized as [Screen.orientation.type](https://w3c.github.io/screen-orientation/#dom-screenorientation-type)
-* The orientation angle of the screen
-  * Standardized as [Screen.orientation.angle](https://w3c.github.io/screen-orientation/#dom-screenorientation-angle)
-* The left screen coordinate
-  * Not standardized, but already exposed by some browsers via
-    [`Screen.left`](https://developer.mozilla.org/en-US/docs/Web/API/Screen/left)
-* The top screen coordinate
-  * Not standardized, but already exposed by some browsers via
-    [`Screen.top`](https://developer.mozilla.org/en-US/docs/Web/API/Screen/top)
-* The left available coordinate
-  * Not standardized, but already exposed by some browsers via
-    [`Screen.availLeft`](https://developer.mozilla.org/en-US/docs/Web/API/Screen/availLeft)
-* The top available coordinate
-  * Not standardized, but already exposed by some browsers via
-    [`Screen.availTop`](https://developer.mozilla.org/en-US/docs/Web/API/Screen/availTop)
-* Whether it is internal (built-in) or external
-  * Not web-exposed, but available via the Chrome Apps
-    [`system.display` API](https://developer.chrome.com/apps/system_display#method-getInfo),
-* Whether it is the primary display or a secondary display
-  * Not web-exposed, but available via the Chrome Apps
-    [`system.display` API](https://developer.chrome.com/apps/system_display#method-getInfo)
-* The device pixel ratio for the screen
-  * Not standardized, but already exposed by some browsers via
-    [`Window.devicePixelRatio`](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio)
-* A generated identifier for the screen
-  * Not web-exposed, but a more persistent id is available via the Chrome Apps
-    [`system.display` API](https://developer.chrome.com/apps/system_display#method-getInfo)
-* Whether the screen supports touch or pen input
-  * Not web-exposed, but available via the Chrome Apps
-    [`system.display` API](https://developer.chrome.com/apps/system_display#method-getInfo)
-* A user-friendly label for the screen
-  * Not web-exposed, but available via the Chrome Apps
-    [`system.display` API](https://developer.chrome.com/apps/system_display#method-getInfo)
-
-Some window placement information is already exposed by the
-[`Window`](https://drafts.csswg.org/cssom-view/#extensions-to-the-window-interface)
-interface, but the proposal requires that bounds be specified in a cross-screen
-coordinate space, not relative to the window's current screen:
-* Bounds (in the web-exposed screen space), i.e.
-[`screenLeft`](https://developer.mozilla.org/en-US/docs/Web/API/Window/screenLeft),
-[`screenTop`](https://developer.mozilla.org/en-US/docs/Web/API/Window/screenTop),
-[`innerWidth`](https://developer.mozilla.org/en-US/docs/Web/API/Window/innerWidth),
-[`outerWidth`](https://developer.mozilla.org/en-US/docs/Web/API/Window/outerWidth),
-[`innerHeight`](https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight),
-[`outerHeight`](https://developer.mozilla.org/en-US/docs/Web/API/Window/outerHeight)
-* scaling factor (unstandardized), i.e.
-[`devicePixelRatio`](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio)
-
-## 2.9 Does this specification enable new script execution/loading mechanisms?
+## 2.7. Does this specification allow an origin to send data to the underlying platform?
 
 No.
 
-## 2.10 Does this specification allow an origin to access other devices?
+## 2.8. Do features in this specification enable access to device sensors?
+No.
 
-This API allows an origin to read properties of screens connected to the device.
-The screen may be internally connected (e.g. the built-in display of a laptop)
-or externally connected (e.g. an external monitor).
-
-An origin cannot use this API to send commands to the displays, so hardening
-against malicious input is not a concern.
-
-Enumerating the screens connected to the device does provide significant
-entropy. If multiple computers are connected to the same set of screens, an
-attacker may use the display information to deduce that those computers are in
-the same physical vicinity. To mitigate this issue, user permission is required
-to access the display list, the API is only available on secure contexts, and
-the ids of each screen are generated on a per-user per-origin basis, reset when
-cookies are cleared.
-
-## 2.11 Does this specification allow an origin some measure of control over a user agent’s native UI?
+## 2.9. Do features in this specification enable new script execution/loading mechanisms?
 
 No.
 
-## 2.12 What temporary identifiers might this specification create or expose to the web?
+## 2.10. Do features in this specification allow an origin to access other devices?
+
+No.
+
+## 2.11. Do features in this specification allow an origin some measure of control over a user agent’s native UI?
+
+No.
+
+## 2.12. What temporary identifiers do the features in this specification create or expose to the web?
 
 None.
 
-## 2.13 How does this specification distinguish between behavior in first-party and third-party contexts?
+## 2.13. How does this specification distinguish between behavior in first-party and third-party contexts?
 
-Only first-party contexts can generally control the window's placement. Third
-party contexts in iframes can already discern the dimensions of their frame;
-nothing in this proposal should affect that. Additionally, third party contexts
-can request element fullscreen (with the `allowfullscreen` feature policy) and
-open and place popup windows; this proposal extends those functionalities for
-cross-screen requests, with similar permission requirements to the first-party
-context of the main frame.
+This feature requires the `fullscreen` [permission policy](https://w3c.github.io/webappsec-permissions-policy/#permissions-policy-http-header-field) in both the opener and the opened content (which will enter fullscreen). Additionally, the opener must be allowed the `window-management` permission policy.
 
-## 2.14 How does this specification work in the context of a user agent’s Private \ Browsing or "incognito" mode?
+## 2.14. How do the features in this specification work in the context of a browser’s Private Browsing or Incognito mode?
 
 The behavior should be the same as for regular mode, except that the user agent
 should not persist permission data and should request permission every session.
 
-## 2.15 Does this specification have a "Security Considerations" and "Privacy Considerations" section?
+## 2.15. Does this specification have both "Security Considerations" and "Privacy Considerations" sections?
 
 Yes.
 
-## 2.16 Does this specification allow downgrading default security characteristics?
+## 2.16. Do features in your specification enable origins to downgrade default security protections?
 
 No.
 
-## 2.17. What should this questionnaire have asked?
+## 2.17. How does your feature handle non-"fully active" documents?
 
-The questionnaire could ask if implementing the proposal would yield or enable
-any additional Security and Privacy protections.
-
-By adding the proposed `window-placement` permission, browsers could further
-limit unpermissioned access to existing information and capabilities.
-
-For example, without the permission, browsers could:
-* Disregard `left` and `top` values requested via window.open()'s
-  [features](https://developer.mozilla.org/en-US/docs/Web/API/Window/open#Window_features)
-  argument string to reduce clickjacking risks.
-* Disregard requests to move popup and web application windows via
-  [`window.moveTo(x, y)`](https://developer.mozilla.org/en-US/docs/Web/API/Window/moveTo)
-  to reduce clickjacking risks.
-* Return the corresponding innerWidth and innerHeight values for Window's
-  [`outerWidth`](https://drafts.csswg.org/cssom-view/#dom-window-outerwidth)
-  and
-  [`outerHeight`](https://drafts.csswg.org/cssom-view/#dom-window-outerheight)
-  to limit information exposed about the window frame size, which can be used to
-  infer more granular information about the user agent, its version, and the
-  window frame type used than would otherwise be exposed.
-* Return 0 for Window's
-  [`screenX`](https://drafts.csswg.org/cssom-view/#dom-window-screenx) and
-  [`screenY`](https://drafts.csswg.org/cssom-view/#dom-window-screeny)
-  attributes to limit similar unnecessary information exposure.
-* Perhaps limit other existing Screen and Window information and capabilities.
-
-The questionnaire could also dig deeper into potential security concerns of the
-API, which are explored in the Privacy & Security section of the explainer.
+This feature builds upon the existing [`window.open()`](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-open-dev) function and does not modify the user or document activation requirements of the function.
