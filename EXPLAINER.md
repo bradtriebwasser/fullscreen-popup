@@ -130,6 +130,9 @@ The browser may omit a `fullscreenchange` event prior to any scripts being execu
 would need to account for this behavior in fullscreen-popup scenarios, or browsers would need to carefully ensure that `fullscreenchange` is not emitted until after
 scripts are ready to handle the event.
 
+#### **Delays entering fullscreen**
+There may exist a delay (unintentional or malicious) between the time the popup is created during the original [user activation](https://html.spec.whatwg.org/multipage/interaction.html#tracking-user-activation) and the time that the [document element](https://dom.spec.whatwg.org/#document-element) becomes available. Slow network conditions or intentional throttling by a malicious server may introduce a significant delay between the popup window opening and the popup's document element becoming available to fullscreen. In such case, the user agent could postpone or abort the steps for making the popup's document element fullscreen. 
+
 ## Security Considerations
 A notable security consideration stems from the fact that the web application may launch a fullscreen window on a display that the user is not looking at, since the [user activation](https://html.spec.whatwg.org/multipage/interaction.html#tracking-user-activation) (i.e. button click) may have occurred on another display which the user is focused on. The user may not notice the fullscreen window transition, nor the fullscreen bubble (e.g. Firefox's "&lt;origin> is now full screen [Exit Full Screen (Esc)]" or Chrome's "Press [Esc] to exit full screen") which could allow for a malicious application to mimic other applications or the operating system without the user realizing that it is a browser window.
 
