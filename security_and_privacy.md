@@ -10,11 +10,11 @@ This feature does not directly expose information to web sites that [`element.re
 
 ## 2.2. Do features in your specification expose the minimum amount of information necessary to enable their intended uses?
 
-No information is exposed to web sites and the usage of the feature is gated on `window-management` permission which already exposes data that could be indirectly obtained from this API (e.g. the dimensions of a screen.). See [Window Management Security & Privacy](https://github.com/w3c/window-management/blob/main/security_and_privacy.md).
+No new information is exposed to web sites.
 
 ## 2.3. How do the features in your specification deal with personal information, personally-identifiable information (PII), or information derived from them?
 
-No information is exposed to web sites and the usage of the feature is gated on `window-management` permission which already exposes data that could be indirectly obtained from this API (e.g. the dimensions of a screen.). See [Window Management Security & Privacy](https://github.com/w3c/window-management/blob/main/security_and_privacy.md).
+No new information is exposed to web sites or collected from users.
 
 ## 2.4. How do the features in your specification deal with sensitive information?
 
@@ -22,7 +22,7 @@ This API does not expose any sensitive information, beyond that described above.
 
 ## 2.5. Do the features in your specification introduce new state for an origin that persists across browsing sessions?
 
-The user agent could persist `window-management` permission grants.
+No.
 
 ## 2.6. Do the features in your specification expose information about the underlying platform to origins?
 
@@ -45,7 +45,7 @@ No.
 
 ## 2.11. Do features in this specification allow an origin some measure of control over a user agent’s native UI?
 
-No.
+Not directly, but invoking HTML Fullscreen, may [change user agent UI](https://fullscreen.spec.whatwg.org/#ui). This proposal introduces an alternative method for invoking HTML fullscreen on a new window.
 
 ## 2.12. What temporary identifiers do the features in this specification create or expose to the web?
 
@@ -70,4 +70,4 @@ No.
 
 ## 2.17. How does your feature handle non-"fully active" documents?
 
-This feature builds upon the existing [`window.open()`](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-open-dev) function and does not modify the user or document activation requirements of the function.
+This feature builds upon the existing [`window.open()`](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-open-dev) function and inherits `window.open()`'s user activation requirements for initiating the request. The algorithm ultimately invokes [`element.requestFullscreen`](https://fullscreen.spec.whatwg.org/#ref-for-dom-element-requestfullscreen%E2%91%A0) on the [document element](https://dom.spec.whatwg.org/#ref-for-dom-document-documentelement%E2%91%A0) once it is available but skips checking user activation requirements since it was already checked in this code path by the `window.open()` algorithm.
