@@ -26,9 +26,11 @@ Some basic illustrative examples which may be achieved with this proposal are li
 *   Video streaming app launches a video directly to fullscreen on a separate display.
 *   3D modeling app launches a preview in fullscreen on a separate display.
 
-This proposal is limited to launching at most 2 frames fullscreen onto two displays. [Future enhancements](https://github.com/w3c/window-placement/blob/main/EXPLAINER_initiating_multi_screen_experiences.md) could allow a web application could launch N fullscreen popup windows to allow for more use cases:
+Web applications may already [enter fullscreen on the current window and open a new (non-fullscreen) popup window on a different display with a single user gesture](https://w3c.github.io/window-placement/#usage-overview-initiate-multi-screen-experiences) (due to [this spec text](https://w3c.github.io/window-placement/#api-window-open-method-definition-changes)). By allowing fullscreen popups, this proposal effectively enables web applications to launch multiple fullscreen windows on multiple displays with a single user gesture. Some examples are listed below:
 *   Financial app opens a fullscreen dashboard on the primary monitor and a fullscreen stock tracker window on a secondary display.
 *   Virtual desktop app launches fullscreen windows on primary and secondary displays to mimic a remote monitor configuration.
+
+Furthermore, a web application could launch N fullscreen popup windows, as long as the user agent allows N popups from a user gesture (i.e. multiple popups allowed by popup blocker being disabled):
 *   Security monitoring app launches 6 fullscreen video feeds on an array of 6 displays.
 *   Gaming app launches 3 fullscreen windows across 3 displays to provide a continuous widescreen view.
 
@@ -65,14 +67,9 @@ To **check if a fullscreen window is requested**, given _tokenizedFeatures_:
 3. If _popup_ is false, then return false.
 4. Let _fullscreen_ be the result of [checking if a window feature is set](https://html.spec.whatwg.org/multipage/window-object.html#window-feature-is-set), given _tokenizedFeatures_, "`fullscreen`", and false.
 5. If _fullscreen_ is false, then return false.
-6. Let _permissionPolicyWindowManagementState_ be the result of [Is feature enabled in document for origin?](https://www.w3.org/TR/permissions-policy/#is-feature-enabled) given feature "`window-management`", the current [Document](https://dom.spec.whatwg.org/#document) and the current [origin](https://url.spec.whatwg.org/#concept-url-origin).
-7. If _permissionPolicyWindowManagementState_ is "Disabled", then return false.
-8. Let _permissionPolicyFullscreenState_ be the result of [Is feature enabled in document for origin?](https://www.w3.org/TR/permissions-policy/#is-feature-enabled) given "`fullscreen`", the current [Document](https://dom.spec.whatwg.org/#document) and the current [origin](https://url.spec.whatwg.org/#concept-url-origin).
-9. If _permissionPolicyFullscreenState_ is "Disabled", then return false.
-10. If the [transient activation state](https://html.spec.whatwg.org/multipage/interaction.html#transient-activation) is false, then return false.
-11. Let _permissionState_ be the result of [getting the current permission state](https://w3c.github.io/permissions/#dfn-getting-the-current-permission-state) given "`window-management`".
-12. If _permissionState_ is "[granted](https://w3c.github.io/permissions/#dom-permissionstate-granted)", then return true.
-13. Return false.
+6. Let _permissionState_ be the result of [getting the current permission state](https://w3c.github.io/permissions/#dfn-getting-the-current-permission-state) given "`window-management`".
+7. If _permissionState_ is "[granted](https://w3c.github.io/permissions/#dom-permissionstate-granted)", then return true.
+8. Return false.
 
 Add a Note below this algorithm which reads:
 > User agents are encouraged to restore the user-agent-adjusted window.open() specified bounds, or their inferred defaults when a fullscreen popup exits fullscreen.
@@ -80,7 +77,7 @@ Add a Note below this algorithm which reads:
 In [7.3.2 Browsing contexts](https://html.spec.whatwg.org/multipage/document-sequences.html#windows), insert a new list item after the [is popup](https://html.spec.whatwg.org/multipage/document-sequences.html#is-popup) item and its corresponding note. The new item should read: "An **is fullscreen** boolean, initially false." with an anchor of #is-fullscreen.
 
 Add a note below the item which reads:
-> If **is fullscreen** is true, user agents should [requestFullscreen](https://fullscreen.spec.whatwg.org/#dom-element-requestfullscreen) on the [browsing context’s ](https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context)active document [documentElement](https://dom.spec.whatwg.org/#dom-document-documentelement) once the `documentElement` is ready.
+> If **is fullscreen** is true, user agents should [requestFullscreen](https://fullscreen.spec.whatwg.org/#dom-element-requestfullscreen) on the [browsing context’s ](https://html.spec.whatwg.org/multipage/document-sequences.html#browsing-context)active document [documentElement](https://dom.spec.whatwg.org/#dom-document-documentelement)
 
 After step 12.1 in **[window open steps](https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-open-steps)**, after "_Set targetNavigable's active browsing context's is popup to the result of [...]_", insert a step:
  > Set targetNavigable's [active browsing context](https://html.spec.whatwg.org/multipage/document-sequences.html#nav-bc)'s is fullscreen to the result of [checking if a fullscreen window is requested](https://html.spec.whatwg.org/multipage/nav-history-apis.html#popup-window-is-requested), given tokenizedFeatures.
@@ -118,7 +115,7 @@ The ability to detect supported keys of the `features` argument is out of scope 
 #### **Requiring popup initial boundaries**
 Scripts may specify window boundaries through the `left`, `top`, `width`, `height` features of [`window.open()`](https://html.spec.whatwg.org/multipage/window-object.html#dom-open-dev) which, under this proposal, control which display the window will appear fullscreen on. Leaving out these parameters may cause undefined behavior (e.g. appearing on the display which contains screen coordinates (0,0)). As a more concrete solution, the algorithmic check for fullscreen could require that `left` and `top` are set which always require the web application to specify a display, and leaves less room for decision by the user agent. However, since `left`, `top`, `width`, `height` are already not required for popup windows, it's reasonable to let the user agent use the existing defaults and fullscreen the window on whichever display would have contained the popup if the `fullscreen` parameter wasn't specified.
 
-#### **Other fullscreen windows**
+#### **Other fullscreen windowss**
 This proposal requires that a new fullscreen window must first be also considered a popup window. Future enhancements may consider allowing other types of windows to be opened in fullscreen.
 
 #### **Fullscreen Exit Behavior**
