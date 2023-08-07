@@ -25,6 +25,8 @@ The [Initiating Multi-Screen Experiences Explainer](https://github.com/w3c/windo
 Some basic illustrative examples which may be achieved with this proposal are listed below:
 *   Video streaming app launches a video directly to fullscreen on a separate display.
 *   3D modeling app launches a preview in fullscreen on a separate display.
+*   Medical report app opens imagery fullscreen on a specialized display.
+*   Point-of-sale app opens a fullscreen payment window on a customer display.
 
 This proposal is limited to launching at most one fullscreen popup onto one display. [Future enhancements](https://github.com/w3c/window-placement/blob/main/EXPLAINER_initiating_multi_screen_experiences.md) could allow a web application could launch N fullscreen popup windows to allow for more use cases:
 *   Financial app opens a fullscreen dashboard on the primary monitor and a fullscreen stock tracker window on a secondary display.
